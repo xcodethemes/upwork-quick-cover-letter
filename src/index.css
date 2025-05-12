@@ -1,0 +1,25 @@
+@font-face {
+  font-family: SF Pro Display;
+  /* src: url('../src/assets/fonts/SFPRODISPLAYREGULAR.OTF'); */
+  src: url('../src/assets/fonts/SFPRODISPLAYMEDIUM.OTF');
+}
+@import "tailwindcss";
+
+@theme{
+  --font-family: SF Pro Display, "sans-serif";
+  --color-link-600: oklch(54.6% 0.245 262.881);
+  --color-pro: #FFB84D;
+}
+
+body {
+  /* font-family: Arial, sans-serif; */
+  font-family: SF Pro Display, sans-serif;
+  padding: 14px;
+  width: 358px;
+  text-align: center;
+}
+
+h4{
+  font-size: 18px;
+ font-weight: 600;
+}
