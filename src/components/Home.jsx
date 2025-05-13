@@ -1,12 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { handleFillValue } from "../utils/helper";
 
 const Home = () => {
   const categories = useSelector((state) => state.category.savedCategories);
   const coverLetters = useSelector((state) => state.coverLetter.coverLetters);
+   const { upwork } = useSelector(
+      (state) => state?.settings
+    );
 
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const [selectedCoverLetterId, setSelectedCoverLetterId] = useState("");
+
+    useEffect(()=>{
+      console.log("upwork in Home==>", upwork)
+    },[upwork])
 
   const filteredCoverLetters = coverLetters.filter(
     (cl) => cl.categoryId === selectedCategoryId
@@ -15,6 +23,15 @@ const Home = () => {
   const selectedCoverLetter = filteredCoverLetters.find(
     (cl) => cl.id === selectedCoverLetterId
   );
+
+  
+  useEffect(() => {
+    console.log("selectedCoverLetter==>", selectedCoverLetter);
+    if (selectedCoverLetter) {
+      handleFillValue(selectedCoverLetter)
+    }
+
+  },[selectedCoverLetter])
 
   return (
     <div className="p-4 max-w-xl mx-auto space-y-4">
