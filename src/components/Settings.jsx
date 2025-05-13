@@ -1,3 +1,4 @@
+//Settings.jsx
 import React, { useEffect, useState } from "react";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import Title from "./Title";

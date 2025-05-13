@@ -1,7 +1,7 @@
 {
+  "name": "Upwork Quick Cover Letter",
+  "version": "1.0",
     "manifest_version": 3,
-    "name": "Upwork Quick Cover Letter",
-    "version": "1.0",
     "description": "It will help fill cover letter in Upwork according to category.",
   
     "icons": {
@@ -41,7 +41,7 @@
       }
     ],
   
-    "host_permissions": ["<all_urls>"],
+    "host_permissions": ["https://www.upwork.com/*"],
   
     "web_accessible_resources": [
       {

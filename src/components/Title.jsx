@@ -3,7 +3,7 @@ import { MdKeyboardArrowLeft } from 'react-icons/md'
 
 const Title = ({setView, title}) => {
   return (
-     <div>
+     <div className='border-b border-gray-100 mb-4'>
             <MdKeyboardArrowLeft
               className="text-[25px] absolute left-2 cursor-pointer"
               onClick={() => setView("main")}
