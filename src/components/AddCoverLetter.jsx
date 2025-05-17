@@ -57,6 +57,35 @@ const AddCoverLetter = ({ setView }) => {
     <div>
       <Title setView={setView} title="Add Cover Letter" />
 
+       {/* Add New */}
+       <div className="space-y-3 mb-5"> 
+        <Dropdown
+          options={categories}
+          selectedId={categoryId}
+          setSelectedId={setCategoryId}
+          placeholder="Select Category"
+        />
+
+        <Input
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Cover Letter Title"
+        />
+
+        <TextareaField
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Cover Letter Description"
+          rows={4}
+        />
+
+        <Button onClick={handleAdd}>
+          <AiOutlinePlus />
+           Add Cover Letter
+        </Button>
+      </div>
+        {/* Add New Ended */}
+
       <div className="mb-6 space-y-3">
         {coverLetters?.map((letter) => (
           <div
@@ -95,7 +124,7 @@ const AddCoverLetter = ({ setView }) => {
                     })?.title || "Unknown Category"
                   })
                 </p>
-                <p className="text-sm mt-1 text-gray-700 max-h-60 overflow-auto">
+                <p className="text-sm mt-1 text-gray-700 max-h-30 overflow-auto">
                   {letter?.description}
                 </p>
               </div>
@@ -143,51 +172,7 @@ const AddCoverLetter = ({ setView }) => {
         ))}
       </div>
 
-      {/* Add New */}
-      <div className="space-y-3"> 
-
-         {/* <select
-          value={categoryId}
-          onChange={(e) => 
-          {
-            console.log('setCategoryId ===>', e.target.value);
-            setCategoryId(e.target.value)}
-          }
-          className="w-full p-2 border rounded text-sm"
-        >
-          <option value="">Select Category</option>
-          {categories.map((cat) => (
-            <option key={cat.id} value={cat.id}>
-              {cat.title}
-            </option>
-          ))}
-        </select> */}
-
-        <Dropdown
-          options={categories}
-          selectedId={categoryId}
-          setSelectedId={setCategoryId}
-          placeholder="Select Category"
-        />
-
-        <Input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Cover Letter Title"
-        />
-
-        <TextareaField
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Cover Letter Description"
-          rows={4}
-        />
-
-        <Button onClick={handleAdd}>
-          <AiOutlinePlus />
-           Add Cover Letter
-        </Button>
-      </div>
+     
     </div>
   );
 };

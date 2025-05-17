@@ -61,7 +61,7 @@ const Home = () => {
 
   return (
     <div className="max-w-xl mx-auto space-y-4">
-      <h1 className="text-2xl font-bold mb-4">View Cover Letter</h1>
+      {/* <h1 className="text-2xl font-bold mb-4">View Cover Letter</h1> */}
 
 
       <div>
