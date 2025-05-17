@@ -93,7 +93,7 @@ const AddCoverLetter = ({ setView }) => {
             className="p-4 border border-gray-300 bg-white rounded relative shadow-sm"
           >
             {editId === letter.id ? (
-              <div className="space-y-2">
+              <div className="space-y-2 mt-5">
                 <Dropdown
                   options={categories}
                   selectedId={editedCategoryId}
@@ -114,7 +114,7 @@ const AddCoverLetter = ({ setView }) => {
                 />
               </div>
             ) : (
-              <div>
+              <div className="mt-5">
                 <p className="text-sm font-semibold">
                   {letter?.title} (
                   {
@@ -134,10 +134,10 @@ const AddCoverLetter = ({ setView }) => {
               {editId === letter.id ? (
                 <>
                   <button onClick={handleUpdate} title="Save">
-                    <FaSave className="text-green-600 hover:text-green-700" />
+                    <FaSave className="text-sm text-green-600 hover:text-green-700" />
                   </button>
                   <button onClick={() => setEditId(null)} title="Cancel">
-                    <FaTimes className="text-gray-500 hover:text-gray-600" />
+                    <FaTimes className="text-sm text-gray-500 hover:text-gray-600" />
                   </button>
                 </>
               ) : (

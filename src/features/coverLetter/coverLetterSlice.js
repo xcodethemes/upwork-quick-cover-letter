@@ -4,7 +4,14 @@ import { v4 as uuidv4 } from "uuid";
 export const coverLetterSlice = createSlice({
   name: "coverLetter",
   initialState: {
-    coverLetters: [],
+    coverLetters: [
+      {
+        id: "9cdb6d56-4c23-41f8-b8fd-498eb1011a85",
+        title: "Node JS Cover Letter - 1",
+        description: "This is a sample cover letter for Node JS position.",
+        categoryId: "9cdb6d56-4c23-41f8-b8fd-498eb1011a85",
+      }
+    ],
   },
   reducers: {
     addCoverLetter: (state, action) => {

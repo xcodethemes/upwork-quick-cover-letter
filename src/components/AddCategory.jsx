@@ -61,7 +61,7 @@ const AddCategory = ({ setView }) => {
       {/* Categories List */}
       {savedCategories.length > 0 ? (
         <div className="space-y-3 mb-6">
-          {savedCategories.map((note) => (
+          {savedCategories?.map((note) => (
             <div
               key={note.id}
               className="p-3 border relative border-gray-300 rounded bg-white flex justify-between items-start shadow-sm"

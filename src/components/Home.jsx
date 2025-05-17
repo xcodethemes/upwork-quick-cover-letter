@@ -2,9 +2,10 @@
 /* eslint-disable no-undef */
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { handleFillValue } from "../utils/helper";
+import { handleAi, handleFillValue } from "../utils/helper";
 import Dropdown from "./ui/Dropdown";
-
+import Button from "./ui/Button";
+import { AiOutlinePlus } from "react-icons/ai";
 
 const Home = () => {
   const [url, setUrl] = useState("");
@@ -59,30 +60,22 @@ const Home = () => {
     }
   }, [selectedCoverLetter, upwork.coverLetter, url]);
 
+  const handleClick = async () => {
+    try {
+      const aiData = await handleAi(upwork?.jobTitle, upwork?.jobDescription, upwork?.skills);
+      console.log("AI Data:", aiData);
+      // You can now use aiData.jobTitle and aiData.jobDescription here
+    } catch (error) {
+      console.error("Error generating AI data:", error);
+    }
+  };
+
   return (
     <div className="max-w-xl mx-auto space-y-4">
       {/* <h1 className="text-2xl font-bold mb-4">View Cover Letter</h1> */}
 
-
       <div>
-        {/* <label className="block text-sm font-medium mb-1">
-          Select Category
-        </label> */}
-        {/* <select
-          className="w-full p-2 border border-gray-300 rounded"
-          value={selectedCategoryId}
-          onChange={(e) => {
-            selectedCategoryId(e.target.value);
-            setSelectedCoverLetterId(""); // Reset on category change
-          }}
-        >
-          <option value="">-- Select Category --</option>
-          {categories.map((cat) => (
-            <option key={cat.id} value={cat.id}>
-              {cat.title}
-            </option>
-          ))}
-        </select> */}
+
       </div>
       {/* Category Dropdown */}
       <Dropdown
@@ -91,7 +84,7 @@ const Home = () => {
         selectedId={selectedCategoryId}
         setSelectedId={(cat) => {
           setSelectedCategoryId(cat);
-          setSelectedCoverLetterId(''); // Reset on category change
+          setSelectedCoverLetterId(""); // Reset on category change
         }}
         placeholder="Select Category"
       />
@@ -109,14 +102,27 @@ const Home = () => {
 
       {/* Cover Letter Preview */}
       {selectedCoverLetter && (
-  <div className="p-4 border border-gray-300 rounded bg-white shadow-sm">
-    <h2 className="text-lg font-semibold">{selectedCoverLetter.title}</h2>
-    <div className="mt-2 text-sm text-gray-700 whitespace-pre-line max-h-60 overflow-auto pr-2">
-      {selectedCoverLetter.description}
-    </div>
-  </div>
-)}
+        <div className="p-4 border border-gray-300 rounded bg-white shadow-sm">
+          <h2 className="text-lg font-semibold">{selectedCoverLetter.title}</h2>
+          <div className="mt-2 text-sm text-gray-700 whitespace-pre-line max-h-60 overflow-auto pr-2">
+            {selectedCoverLetter.description}
+          </div>
+        </div>
+      )}
 
+      <div className="mt-5">
+        {/* <h1 className="text-base font-bold text-center mb-4">Create Ai Cover Letter</h1> */}
+        <div>
+          {/* <Button onClick={handleAi(upwork?.jobTitle, upwork?.jobDescription)}>
+            <AiOutlinePlus />
+            Add Ai
+          </Button> */}
+          <Button onClick={handleClick}>
+            <AiOutlinePlus />
+            Add Ai
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };

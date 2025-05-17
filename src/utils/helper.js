@@ -33,33 +33,68 @@ export const handleFillValue = (selectedCoverLetter, coverLetterSelector) => {
   }
 };
 
-//new
-// utils/helper.js
-// export const handleFillValue = (coverLetter) => {
-//   if (!coverLetter?.description) return;
+export const handleAi = (
+  jobTitleSelector,
+  jobDescriptionSelector,
+  skillsSelector
+) => {
+  return new Promise((resolve, reject) => {
+    if (typeof chrome !== "undefined" && chrome.tabs) {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (tabs.length === 0) {
+          return reject("No active tab found.");
+        }
 
-//   const tryInject = () => {
-//     const textarea = document.querySelector("textarea[name='coverLetter']"); // <- Replace with correct selector
-//     if (textarea) {
-//       textarea.focus();
-//       textarea.value = coverLetter.description;
-//       textarea.dispatchEvent(new Event("input", { bubbles: true }));
-//       console.log("✅ Cover letter filled");
-//       return true;
-//     }
-//     return false;
-//   };
+        chrome.scripting.executeScript(
+          {
+            target: { tabId: tabs[0].id },
+            args: [jobTitleSelector, jobDescriptionSelector, skillsSelector],
+            func: (
+              jobTitleSelector,
+              jobDescriptionSelector,
+              skillsSelector
+            ) => {
+              const jobTitleElement = document.querySelector(jobTitleSelector);
+              const jobDescriptionElement = document.querySelector(
+                jobDescriptionSelector
+              );
 
-//   // Try immediately
-//   if (tryInject()) return;
+              const skillElement = document.querySelector(skillsSelector);
 
-//   // Fallback: observe if not found
-//   const observer = new MutationObserver((mutations, obs) => {
-//     if (tryInject()) obs.disconnect();
-//   });
+              const upworkSkills = Array.from(
+                skillElement.querySelectorAll("li")
+              ).map((li) => li.textContent.trim());
 
-//   observer.observe(document.body, {
-//     childList: true,
-//     subtree: true,
-//   });
-// };
+              console.log(upworkSkills);
+
+              const upworkPrompt = {
+                jobTitle: jobTitleElement?.innerText || "",
+                jobDescription: jobDescriptionElement?.innerText || "",
+                skillElement: upworkSkills,
+              };
+
+              return upworkPrompt;
+            },
+          },
+          (injectionResults) => {
+            if (chrome.runtime.lastError) {
+              return reject(chrome.runtime.lastError.message);
+            }
+
+            if (
+              injectionResults &&
+              injectionResults[0] &&
+              injectionResults[0].result
+            ) {
+              resolve(injectionResults[0].result);
+            } else {
+              reject("No result returned from content script");
+            }
+          }
+        );
+      });
+    } else {
+      reject("Chrome API is not available.");
+    }
+  });
+};
