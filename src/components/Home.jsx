@@ -62,9 +62,35 @@ const Home = () => {
 
   const handleClick = async () => {
     try {
-      const aiData = await handleAi(upwork?.jobTitle, upwork?.jobDescription, upwork?.skills);
+      const aiData = await handleAi(
+        upwork?.jobTitle,
+        upwork?.jobDescription,
+        upwork?.skills
+      );
       console.log("AI Data:", aiData);
       // You can now use aiData.jobTitle and aiData.jobDescription here
+
+      const prompt = `
+      Write a professional cover letter for the following job:
+      
+      Job Title: ${aiData.jobTitle}
+      Job Description: ${aiData.jobDescription}
+      Skills: ${aiData.skillElement.join(", ")}
+      `;
+      setTimeout(() => {
+        chrome.tabs.create({ url: "https://chat.openai.com" }, (tab) => {
+          // Once the tab is created, send the prompt to the content script
+          chrome.tabs.onUpdated.addListener(function listener(tabId, info) {
+            if (tabId === tab.id && info.status === "complete") {
+              chrome.tabs.sendMessage(tabId, {
+                type: "inject_prompt",
+                prompt,
+              });
+              chrome.tabs.onUpdated.removeListener(listener);
+            }
+          });
+        });
+      }, 500);
     } catch (error) {
       console.error("Error generating AI data:", error);
     }
@@ -74,9 +100,7 @@ const Home = () => {
     <div className="max-w-xl mx-auto space-y-4">
       {/* <h1 className="text-2xl font-bold mb-4">View Cover Letter</h1> */}
 
-      <div>
-
-      </div>
+      <div></div>
       {/* Category Dropdown */}
       <Dropdown
         label="Select Category"
@@ -120,6 +144,37 @@ const Home = () => {
           <Button onClick={handleClick}>
             <AiOutlinePlus />
             Add Ai
+          </Button>
+
+          <Button
+            onClick={() => {
+              chrome.tabs.query({}, (tabs) => {
+                const chatGptTab = tabs.find(
+                  (tab) =>
+                    tab.url && tab.url.includes("https://chat.openai.com")
+                );
+
+                if (chatGptTab) {
+                  chrome.tabs.sendMessage(
+                    chatGptTab.id,
+                    { type: "fetch_response" },
+                    (response) => {
+                      if (response?.content) {
+                        console.log("ChatGPT Response:", response.content);
+                        // You can also inject it:
+                        // handleFillValue({ description: response.content }, upwork.coverLetter);
+                      } else {
+                        alert("Could not get response from ChatGPT.");
+                      }
+                    }
+                  );
+                } else {
+                  alert("Please open ChatGPT tab first");
+                }
+              });
+            }}
+          >
+            Fetch Cover Letter
           </Button>
         </div>
       </div>
