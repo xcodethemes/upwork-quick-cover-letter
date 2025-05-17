@@ -3,9 +3,12 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { handleFillValue } from "../utils/helper";
+import Dropdown from "./ui/Dropdown";
+
 
 const Home = () => {
   const [url, setUrl] = useState("");
+
   const categories = useSelector((state) => state.category.savedCategories);
   const coverLetters = useSelector((state) => state.coverLetter.coverLetters);
   const { upwork } = useSelector((state) => state?.settings);
@@ -15,7 +18,6 @@ const Home = () => {
 
   // Initial fetch of URL and setup listener
   useEffect(() => {
-    // Get initial tab URL
     chrome.runtime.sendMessage({ type: "get_tab_url" }, (response) => {
       if (response?.url) {
         console.log("Initial tab URL:", response.url);
@@ -23,7 +25,6 @@ const Home = () => {
       }
     });
 
-    // Listener for tab URL updates
     const handleMessage = (message) => {
       if (message.type === "tab_url_updated") {
         console.log("Tab changed - New URL:", message.url);
@@ -32,58 +33,46 @@ const Home = () => {
     };
 
     chrome.runtime.onMessage.addListener(handleMessage);
-
     return () => {
       chrome.runtime.onMessage.removeListener(handleMessage);
     };
   }, []);
 
-  // Handle when URL changes
   useEffect(() => {
     if (url) {
-      console.log("🔄 URL changed:", url,);
-      // You can do something like auto-select category or inject here
+      console.log("🔄 URL changed:", url);
     }
   }, [url]);
-
-  // useEffect(() => {
-  //   console.log("🛠 Upwork setting:", upwork);
-  // }, [upwork]);
 
   const filteredCoverLetters = coverLetters.filter(
     (cl) => cl.categoryId === selectedCategoryId
   );
-
   const selectedCoverLetter = filteredCoverLetters.find(
     (cl) => cl.id === selectedCoverLetterId
   );
-
   useEffect(() => {
-    console.log("✉️ Selected Cover Letter:", selectedCoverLetter, 'check url too==>', url);
     if (selectedCoverLetter) {
-      console.log('going to fill', 'upwork=>', upwork.coverLetter)
-      const coverLetterSelector= upwork.coverLetter;
+      console.log("✉️ Selected Cover Letter:", selectedCoverLetter);
       setTimeout(() => {
-
-        handleFillValue(selectedCoverLetter, coverLetterSelector);
+        handleFillValue(selectedCoverLetter, upwork.coverLetter);
       }, 1500);
     }
   }, [selectedCoverLetter, upwork.coverLetter, url]);
 
   return (
-    <div className="p-4 max-w-xl mx-auto space-y-4">
+    <div className="max-w-xl mx-auto space-y-4">
       <h1 className="text-2xl font-bold mb-4">View Cover Letter</h1>
 
-      {/* Category Dropdown */}
+
       <div>
-        <label className="block text-sm font-medium mb-1">
+        {/* <label className="block text-sm font-medium mb-1">
           Select Category
-        </label>
-        <select
+        </label> */}
+        {/* <select
           className="w-full p-2 border border-gray-300 rounded"
           value={selectedCategoryId}
           onChange={(e) => {
-            setSelectedCategoryId(e.target.value);
+            selectedCategoryId(e.target.value);
             setSelectedCoverLetterId(""); // Reset on category change
           }}
         >
@@ -93,39 +82,41 @@ const Home = () => {
               {cat.title}
             </option>
           ))}
-        </select>
+        </select> */}
       </div>
+      {/* Category Dropdown */}
+      <Dropdown
+        label="Select Category"
+        options={categories}
+        selectedId={selectedCategoryId}
+        setSelectedId={(cat) => {
+          setSelectedCategoryId(cat);
+          setSelectedCoverLetterId(''); // Reset on category change
+        }}
+        placeholder="Select Category"
+      />
 
       {/* Cover Letter Dropdown */}
       {selectedCategoryId && (
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            Select Cover Letter
-          </label>
-          <select
-            className="w-full p-2 border border-gray-300 rounded"
-            value={selectedCoverLetterId}
-            onChange={(e) => setSelectedCoverLetterId(e.target.value)}
-          >
-            <option value="">-- Select Cover Letter --</option>
-            {filteredCoverLetters.map((cl) => (
-              <option key={cl.id} value={cl.id}>
-                {cl.title}
-              </option>
-            ))}
-          </select>
-        </div>
+        <Dropdown
+          label="Select Cover Letter"
+          options={filteredCoverLetters}
+          selectedId={selectedCoverLetterId}
+          setSelectedId={setSelectedCoverLetterId}
+          placeholder="Select Cover Letter"
+        />
       )}
 
       {/* Cover Letter Preview */}
       {selectedCoverLetter && (
-        <div className="p-4 border border-gray-300 rounded bg-white shadow-sm">
-          <h2 className="text-lg font-semibold">{selectedCoverLetter.title}</h2>
-          <p className="mt-2 text-sm text-gray-700 whitespace-pre-line">
-            {selectedCoverLetter.description}
-          </p>
-        </div>
-      )}
+  <div className="p-4 border border-gray-300 rounded bg-white shadow-sm">
+    <h2 className="text-lg font-semibold">{selectedCoverLetter.title}</h2>
+    <div className="mt-2 text-sm text-gray-700 whitespace-pre-line max-h-60 overflow-auto pr-2">
+      {selectedCoverLetter.description}
+    </div>
+  </div>
+)}
+
     </div>
   );
 };

@@ -8,6 +8,9 @@ import {
   deleteCategory,
   updateCategory,
 } from "../features/category/categorySlice";
+import Input from "./ui/Input";
+import Button from "./ui/Button";
+
 
 const AddCategory = ({ setView }) => {
   const dispatch = useDispatch();
@@ -64,23 +67,18 @@ const AddCategory = ({ setView }) => {
               className="p-3 border relative border-gray-300 rounded bg-white flex justify-between items-start shadow-sm"
             >
               {editId === note.id ? (
-                <div className="flex-1 pr-2 mt-5">
-                  <input
-                    type="text"
-                    value={editedTitle}
-                    onChange={(e) => {
-                      setEditedTitle(e.target.value);
-                      if (e.target.value.trim()) setEditTitleError("");
-                    }}
-                    className="w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 rounded p-1 mb-2 text-sm"
-                    placeholder="Edit title"
-                  />
-                  {editTitleError && (
-                    <p className="text-red-500 text-xs mb-2">{editTitleError}</p>
-                  )}
-                </div>
+                <Input
+                  value={editedTitle}
+                  onChange={(e) => {
+                    setEditedTitle(e.target.value);
+                    if (e.target.value.trim()) setEditTitleError("");
+                  }}
+                  placeholder="Edit title"
+                  error={editTitleError}
+                  className="flex-1 pr-2 mt-5"
+                />
               ) : (
-                <div className="flex-1 pr-2 ">
+                <div className="flex-1 pr-2">
                   <p className="font-medium text-sm">{note.title}</p>
                 </div>
               )}
@@ -134,28 +132,21 @@ const AddCategory = ({ setView }) => {
       )}
 
       {/* Add New Category Input */}
-      <div>
-        <input
-          type="text"
-          placeholder="Write category title"
-          value={category}
-          onChange={(e) => {
-            setCategory(e.target.value);
-            if (e.target.value.trim()) setTitleError("");
-          }}
-          className="w-full p-2 border border-gray-300 rounded mb-2 text-sm"
-        />
-        {titleError && <p className="text-red-500 text-sm mb-2">{titleError}</p>}
+      <Input
+        value={category}
+        onChange={(e) => {
+          setCategory(e.target.value);
+          if (e.target.value.trim()) setTitleError("");
+        }}
+        placeholder="Write category title"
+        error={titleError}
+      />
 
-        <div className="space-y-3">
-          <button
-            onClick={handleAddCategory}
-            className="w-full text-base bg-teal-600 hover:bg-teal-700 text-white flex items-center justify-center gap-2 font-semibold py-2 rounded"
-          >
-            <AiOutlinePlus />
-            Add Category
-          </button>
-        </div>
+      <div className="space-y-3">
+        <Button onClick={handleAddCategory}>
+          <AiOutlinePlus />
+          Add Category
+        </Button>
       </div>
     </div>
   );

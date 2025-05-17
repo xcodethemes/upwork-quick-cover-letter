@@ -8,6 +8,10 @@ import {
 } from "../features/coverLetter/coverLetterSlice";
 import { FaSave, FaTimes } from "react-icons/fa";
 import { AiOutlinePlus } from "react-icons/ai";
+import TextareaField from "./ui/TextareaField";
+import Input from "./ui/Input";
+import Dropdown from "./ui/Dropdown";
+import Button from "./ui/Button";
 
 const AddCoverLetter = ({ setView }) => {
   const dispatch = useDispatch();
@@ -54,36 +58,28 @@ const AddCoverLetter = ({ setView }) => {
       <Title setView={setView} title="Add Cover Letter" />
 
       <div className="mb-6 space-y-3">
-        {coverLetters.map((letter) => (
+        {coverLetters?.map((letter) => (
           <div
             key={letter.id}
             className="p-4 border border-gray-300 bg-white rounded relative shadow-sm"
           >
             {editId === letter.id ? (
               <div className="space-y-2">
-                <select
-                  value={editedCategoryId}
-                  onChange={(e) => setEditedCategoryId(e.target.value)}
-                  className="w-full p-2 border rounded text-sm"
-                >
-                  <option value="">Select Category</option>
-                  {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                      {cat.title}
-                    </option>
-                  ))}
-                </select>
-                <input
+                <Dropdown
+                  options={categories}
+                  selectedId={editedCategoryId}
+                  setSelectedId={setEditedCategoryId}
+                  placeholder="Select Category"
+                />
+                <Input
                   type="text"
                   value={editedTitle}
                   onChange={(e) => setEditedTitle(e.target.value)}
-                  className="w-full p-2 border rounded text-sm"
                   placeholder="Edit title"
                 />
-                <textarea
+                <TextareaField
                   value={editedDescription}
                   onChange={(e) => setEditedDescription(e.target.value)}
-                  className="w-full p-2 border rounded text-sm"
                   rows={3}
                   placeholder="Edit description"
                 />
@@ -91,9 +87,17 @@ const AddCoverLetter = ({ setView }) => {
             ) : (
               <div>
                 <p className="text-sm font-semibold">
-                  {letter.title} ({categories.find((cat) => cat.id === letter.categoryId)?.title || "Unknown Category"})
+                  {letter?.title} (
+                  {
+                    categories?.find((cat) => {
+                      // console.log('cat.id===>', cat.id, 'letter==>', letter, 'letter.categoryId==>', letter.categoryId, '');
+                      return String(cat.id) === String(letter.categoryId);
+                    })?.title || "Unknown Category"
+                  })
                 </p>
-                <p className="text-sm mt-1 text-gray-700">{letter.description}</p>
+                <p className="text-sm mt-1 text-gray-700 max-h-60 overflow-auto">
+                  {letter?.description}
+                </p>
               </div>
             )}
 
@@ -117,10 +121,20 @@ const AddCoverLetter = ({ setView }) => {
                       setEditedCategoryId(letter.categoryId);
                     }}
                   >
-                    <img src="icons/edit.png" alt="Edit" className="w-[20px] h-[20px]" />
+                    <img
+                      src="icons/edit.png"
+                      alt="Edit"
+                      className="w-[20px] h-[20px]"
+                    />
                   </button>
-                  <button onClick={() => dispatch(deleteCoverLetter(letter.id))}>
-                    <img src="icons/Delete.png" alt="Delete" className="w-[20px] h-[20px]" />
+                  <button
+                    onClick={() => dispatch(deleteCoverLetter(letter.id))}
+                  >
+                    <img
+                      src="icons/Delete.png"
+                      alt="Delete"
+                      className="w-[20px] h-[20px]"
+                    />
                   </button>
                 </>
               )}
@@ -130,10 +144,15 @@ const AddCoverLetter = ({ setView }) => {
       </div>
 
       {/* Add New */}
-      <div className="space-y-3">
-        <select
+      <div className="space-y-3"> 
+
+         {/* <select
           value={categoryId}
-          onChange={(e) => setCategoryId(e.target.value)}
+          onChange={(e) => 
+          {
+            console.log('setCategoryId ===>', e.target.value);
+            setCategoryId(e.target.value)}
+          }
           className="w-full p-2 border rounded text-sm"
         >
           <option value="">Select Category</option>
@@ -142,28 +161,32 @@ const AddCoverLetter = ({ setView }) => {
               {cat.title}
             </option>
           ))}
-        </select>
-        <input
-          type="text"
-          placeholder="Cover Letter Title"
+        </select> */}
+
+        <Dropdown
+          options={categories}
+          selectedId={categoryId}
+          setSelectedId={setCategoryId}
+          placeholder="Select Category"
+        />
+
+        <Input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full p-2 border rounded text-sm"
+          placeholder="Cover Letter Title"
         />
-        <textarea
-          placeholder="Cover Letter Description"
+
+        <TextareaField
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="w-full p-2 border rounded text-sm"
+          placeholder="Cover Letter Description"
           rows={4}
         />
-        <button
-          onClick={handleAdd}
-          className="w-full text-base bg-teal-600 hover:bg-teal-700 text-white flex items-center justify-center gap-2 font-semibold py-2 rounded"
-        >
+
+        <Button onClick={handleAdd}>
           <AiOutlinePlus />
-          Add Cover Letter
-        </button>
+           Add Cover Letter
+        </Button>
       </div>
     </div>
   );
