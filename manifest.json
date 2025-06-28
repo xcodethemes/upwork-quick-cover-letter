@@ -25,8 +25,17 @@
       "default_path": "index.html" 
     },
   
-    "permissions": ["scripting", "sidePanel", "activeTab", "storage", "tabs"],
+    "permissions": ["scripting", "sidePanel", "activeTab", "storage", "tabs", "identity"],
+    "oauth2": { 
+    "client_id": "261523942348-ott5o9faqt8hvjpdl6ojboifdbst6t61.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile"
+    ]
+  },
+
   
+    
     "background": {
       "service_worker": "background.js",
       "type": "module"
@@ -48,6 +57,9 @@
         "resources": ["*.js", "*.css", "*.html"],
         "matches": ["<all_urls>"]
       }
-    ]
+    ],
+    "content_security_policy": { 
+    "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://www.googleapis.com https://securetoken.googleapis.com https://firebaseauth.googleapis.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com;"
+  }
   }
   
